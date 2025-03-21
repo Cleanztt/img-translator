@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品图片翻译网站 - 原型设计</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        :root {
+            --primary: #2D82B7;
+            --secondary: #53A6D8;
+            --accent: #FF6B6B;
+            --background: #F9F9F9;
+            --text: #333333;
+            --light-gray: #EEEEEE;
+            --dark-gray: #666666;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+        
+        button:hover {
+            background-color: #236a96;
+            transform: translateY(-2px);
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        .accent-button {
+            background-color: var(--accent);
+        }
+        
+        .accent-button:hover {
+            background-color: #e05555;
+        }
+        
+        .secondary-button {
+            background-color: var(--secondary);
+        }
+        
+        .secondary-button:hover {
+            background-color: #4590bb;
+        }
+        
+        .ghost-button {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            box-shadow: none;
+        }
+        
+        .ghost-button:hover {
+            background-color: rgba(45, 130, 183, 0.1);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 20px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+            background-color: rgba(45, 130, 183, 0.1);
+        }
+        
+        /* 标签页样式 */
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* 首页样式 */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--dark-gray);
+        }
+        
+        .hero-button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        /* 上传界面样式 */
+        .upload-area {
+            border: 2px dashed var(--secondary);
+            border-radius: var(--border-radius);
+            padding: 60px;
+            text-align: center;
+            margin: 30px 0;
+            transition: var(--transition);
+            background-color: rgba(83, 166, 216, 0.05);
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(83, 166, 216, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+        }
+        
+        .file-info {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        /* 处理界面样式 */
+        .process-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .image-preview {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .preview-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .process-steps {
+            margin: 30px 0;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: var(--shadow);
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--dark-gray);
+        }
+        
+        .step.active .step-icon {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .step.completed .step-icon {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* 结果界面样式 */
+        .result-actions {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .image-comparison {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            height: 400px;
+        }
+        
+        .comparison-slider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 100%;
+            width: 4px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            cursor: ew-resize;
+        }
+        
+        .comparison-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 11;
+        }
+        
+        .comparison-before, .comparison-after {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .comparison-before {
+            left: 0;
+            width: 50%;
+        }
+        
+        .comparison-after {
+            right: 0;
+            width: 50%;
+        }
+        
+        .comparison-before img, .comparison-after img {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: auto;
+            max-width: none;
+        }
+        
+        .comparison-before img {
+            left: 0;
+        }
+        
+        .comparison-after img {
+            right: 0;
+        }
+        
+        .comparison-label {
+            position: absolute;
+            top: 10px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 9;
+        }
+        
+        .before-label {
+            left: 10px;
+        }
+        
+        .after-label {
+            right: 10px;
+        }
+        
+        /* 设置界面样式 */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-section h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            background-color: white;
+        }
+        
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--light-gray);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .switch-label {
+            display: flex;
+            align-items: center;
+        }
+        
+        .switch-label span {
+            margin-left: 10px;
+        }
+        
+        /* 动画 */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .process-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+            
+            .navbar-content {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="container navbar-content">
+            <div class="logo">
+                <i class="fas fa-language"></i>
+                <span>商品图片翻译</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="tab-link active" data-tab="home">首页</a></li>
+                <li><a href="#" class="tab-link" data-tab="workspace">翻译工作区</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- 标签内容 -->
+        <div class="tab-content active" id="home">
+            <div class="hero">
+                <h1>商品图片文字一键翻译</h1>
+                <p>轻松识别商品图片中的文字，并自动翻译成英文。高效、准确、简单，帮助您快速为产品打入国际市场。</p>
+                <button class="hero-button accent-button" id="start-button">
+                    <i class="fas fa-rocket"></i> 立即开始
+                </button>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>简单上传</h3>
+                    <p>支持拖拽上传和选择文件，操作简单直观。支持多种图片格式，包括JPG、PNG、GIF等。</p>
+                </div>
+                
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>精准翻译</h3>
+                    <p>采用百度翻译API，准确识别图片中的文字，并提供高质量的翻译结果，支持多种语言。</p>
+                </div>
+                
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>快速下载</h3>
+                    <p>翻译完成后，一键下载处理后的图片，直接用于您的电商平台、产品宣传或其他需求。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="workspace">
+            <div class="card" id="workspace-step-upload">
+                <h2>上传商品图片</h2>
+                <p>请上传需要翻译的商品图片，我们将自动识别图片中的文字并翻译成英文。</p>
+                
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">拖拽图片到这里，或点击选择文件</div>
+                    <button class="secondary-button" id="select-image-btn">
+                        <i class="fas fa-file-image"></i> 选择图片
+                    </button>
+                    <input type="file" id="file-input" style="display: none;" accept="image/*">
+                    <div class="file-info">支持 JPG、PNG、GIF 格式，最大文件大小 10MB</div>
+                </div>
+                
+                <div id="upload-progress" style="display: none;">
+                    <h3>上传中...</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="upload-progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px;">正在上传图片，请稍候...</p>
+                </div>
+            </div>
+            
+            <div class="card" id="workspace-step-process" style="display: none;">
+                <h2>图片处理中</h2>
+                <p>正在对上传的商品图片进行文字识别和翻译处理。</p>
+                
+                <div class="process-container">
+                    <div class="image-preview">
+                        <img id="original-image-preview" src="" alt="原始图片预览">
+                        <div class="preview-label">原始图片</div>
+                    </div>
+                    
+                    <div class="image-preview">
+                        <img id="processed-image-preview" src="" alt="处理后图片预览">
+                        <div class="preview-label" id="processed-image-label">处理中...</div>
+                    </div>
+                </div>
+                
+                <div class="process-steps">
+                    <div class="step completed" id="step-upload">
+                        <div class="step-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-name">上传图片</div>
+                            <div class="step-description">已完成</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step active" id="step-ocr">
+                        <div class="step-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-name">文字识别(OCR)</div>
+                            <div class="step-description">正在识别图片中的文字...</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="ocr-progress-bar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step" id="step-translate">
+                        <div class="step-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-name">文字翻译</div>
+                            <div class="step-description">等待中...</div>
+                            <div class="progress-bar" style="display: none;">
+                                <div class="progress-fill" id="translate-progress-bar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step" id="step-image-process">
+                        <div class="step-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-name">图像处理</div>
+                            <div class="step-description">等待中...</div>
+                            <div class="progress-bar" style="display: none;">
+                                <div class="progress-fill" id="image-process-progress-bar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="ghost-button" id="cancel-process-btn">
+                    <i class="fas fa-times"></i> 取消处理
+                </button>
+            </div>
+            
+            <div class="card" id="workspace-step-result" style="display: none;">
+                <h2>翻译结果</h2>
+                <p>图片处理完成，您可以查看翻译前后的对比，并下载翻译后的图片。</p>
+                
+                <div class="image-comparison">
+                    <div class="comparison-slider" id="comparison-slider">
+                        <div class="comparison-handle">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                    </div>
+                    <div class="comparison-before">
+                        <img id="comparison-before-img" src="" alt="原始图片">
+                    </div>
+                    <div class="comparison-after">
+                        <img id="comparison-after-img" src="" alt="翻译后图片">
+                    </div>
+                    <div class="comparison-label before-label">原始图片</div>
+                    <div class="comparison-label after-label">翻译后</div>
+                </div>
+                
+                <div class="result-actions">
+                    <button class="accent-button" id="download-btn">
+                        <i class="fas fa-download"></i> 下载图片
+                    </button>
+                    <button class="secondary-button" id="share-btn">
+                        <i class="fas fa-share-alt"></i> 分享
+                    </button>
+                    <button class="ghost-button" id="new-upload-btn">
+                        <i class="fas fa-upload"></i> 上传新图片
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <h3>识别到的文本</h3>
+                    <p><strong>原文:</strong> <span id="original-text">智能翻译器 - 一键翻译您的商品图片，快速获取多语言版本。</span></p>
+                    <p><strong>翻译:</strong> <span id="translated-text">Smart Translator - Translate your product images with one click, quickly get multilingual versions.</span></p>
+                </div>
+                
+                <div class="card settings-section">
+                    <h3>翻译设置</h3>
+                    <div class="form-group">
+                        <label for="target-language">目标语言</label>
+                        <select id="target-language">
+                            <option value="en">英文</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日文</option>
+                            <option value="ko">韩文</option>
+                            <option value="fr">法文</option>
+                            <option value="de">德文</option>
+                        </select>
+                    </div>
+                    <button class="secondary-button" id="retranslate-btn">
+                        <i class="fas fa-sync-alt"></i> 重新翻译
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 这只是原型，所以仅添加一些基本的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签切换
+            const tabLinks = document.querySelectorAll('.tab-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    
+                    // 显示对应的标签内容
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // 首页的"立即开始"按钮
+            const startButton = document.getElementById('start-button');
+            if (startButton) {
+                startButton.addEventListener('click', function() {
+                    // 切换到工作区标签
+                    document.querySelector('.tab-link[data-tab="workspace"]').click();
+                });
+            }
+
+            // 工作区逻辑
+            setupWorkspace();
+            
+            // 图片对比滑块交互
+            setupComparisonSlider();
+        });
+
+        /**
+         * 设置工作区的交互逻辑
+         */
+        function setupWorkspace() {
+            // 文件上传相关元素
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            const selectImageBtn = document.getElementById('select-image-btn');
+            const uploadProgress = document.getElementById('upload-progress');
+            const uploadProgressBar = document.getElementById('upload-progress-bar');
+            
+            // 处理步骤相关元素
+            const workspaceStepUpload = document.getElementById('workspace-step-upload');
+            const workspaceStepProcess = document.getElementById('workspace-step-process');
+            const workspaceStepResult = document.getElementById('workspace-step-result');
+            const cancelProcessBtn = document.getElementById('cancel-process-btn');
+            
+            // 处理结果相关元素
+            const newUploadBtn = document.getElementById('new-upload-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const shareBtn = document.getElementById('share-btn');
+            const retranslateBtn = document.getElementById('retranslate-btn');
+            
+            // 图片预览元素
+            const originalImagePreview = document.getElementById('original-image-preview');
+            const processedImagePreview = document.getElementById('processed-image-preview');
+            const comparisonBeforeImg = document.getElementById('comparison-before-img');
+            const comparisonAfterImg = document.getElementById('comparison-after-img');
+            
+            // 处理步骤元素
+            const stepOcr = document.getElementById('step-ocr');
+            const stepTranslate = document.getElementById('step-translate');
+            const stepImageProcess = document.getElementById('step-image-process');
+            
+            // 进度条元素
+            const ocrProgressBar = document.getElementById('ocr-progress-bar');
+            const translateProgressBar = document.getElementById('translate-progress-bar');
+            const imageProcessProgressBar = document.getElementById('image-process-progress-bar');
+            
+            // 文本显示元素
+            const originalText = document.getElementById('original-text');
+            const translatedText = document.getElementById('translated-text');
+
+            // 点击选择图片按钮
+            if (selectImageBtn) {
+                selectImageBtn.addEventListener('click', function() {
+                    fileInput.click();
+                });
+            }
+
+            // 文件选择事件
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    if (this.files && this.files[0]) {
+                        handleImageUpload(this.files[0]);
+                    }
+                });
+            }
+
+            // 拖放上传
+            if (uploadArea) {
+                uploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = 'rgba(83, 166, 216, 0.2)';
+                });
+
+                uploadArea.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = 'rgba(83, 166, 216, 0.05)';
+                });
+
+                uploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = 'rgba(83, 166, 216, 0.05)';
+                    
+                    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                        handleImageUpload(e.dataTransfer.files[0]);
+                    }
+                });
+            }
+
+            // 处理图片上传
+            function handleImageUpload(file) {
+                // 检查文件类型
+                if (!file.type.match('image.*')) {
+                    alert('请上传图片文件！');
+                    return;
+                }
+
+                // 显示上传进度
+                uploadProgress.style.display = 'block';
+                
+                // 模拟上传进度
+                let progress = 0;
+                const progressInterval = setInterval(function() {
+                    progress += 5;
+                    uploadProgressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        setTimeout(function() {
+                            startImageProcessing(file);
+                        }, 500);
+                    }
+                }, 100);
+            }
+
+            // 开始图片处理流程
+            function startImageProcessing(file) {
+                // 隐藏上传区域，显示处理区域
+                workspaceStepUpload.style.display = 'none';
+                workspaceStepProcess.style.display = 'block';
+                
+                // 显示原始图片
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageUrl = e.target.result;
+                    originalImagePreview.src = imageUrl;
+                    processedImagePreview.src = imageUrl; // 初始时相同
+                    
+                    // 结果页面也使用相同的图片
+                    comparisonBeforeImg.src = imageUrl;
+                    comparisonAfterImg.src = imageUrl;
+                };
+                reader.readAsDataURL(file);
+
+                // 模拟OCR处理
+                simulateOcrProcess();
+            }
+
+            // 模拟OCR处理
+            function simulateOcrProcess() {
+                let progress = 0;
+                const ocrInterval = setInterval(function() {
+                    progress += 2;
+                    ocrProgressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(ocrInterval);
+                        
+                        // OCR完成
+                        stepOcr.classList.remove('active');
+                        stepOcr.classList.add('completed');
+                        stepOcr.querySelector('.step-icon i').className = 'fas fa-check';
+                        stepOcr.querySelector('.step-description').textContent = '已完成';
+                        
+                        // 开始翻译
+                        stepTranslate.classList.add('active');
+                        stepTranslate.querySelector('.progress-bar').style.display = 'block';
+                        stepTranslate.querySelector('.step-description').textContent = '正在翻译文字...';
+                        
+                        simulateTranslateProcess();
+                    }
+                }, 50);
+            }
+
+            // 模拟翻译处理
+            function simulateTranslateProcess() {
+                let progress = 0;
+                const translateInterval = setInterval(function() {
+                    progress += 3;
+                    translateProgressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(translateInterval);
+                        
+                        // 翻译完成
+                        stepTranslate.classList.remove('active');
+                        stepTranslate.classList.add('completed');
+                        stepTranslate.querySelector('.step-icon i').className = 'fas fa-check';
+                        stepTranslate.querySelector('.step-description').textContent = '已完成';
+                        
+                        // 开始图像处理
+                        stepImageProcess.classList.add('active');
+                        stepImageProcess.querySelector('.progress-bar').style.display = 'block';
+                        stepImageProcess.querySelector('.step-description').textContent = '正在处理图像...';
+                        
+                        simulateImageProcess();
+                    }
+                }, 40);
+            }
+
+            // 模拟图像处理
+            function simulateImageProcess() {
+                let progress = 0;
+                const imageProcessInterval = setInterval(function() {
+                    progress += 1;
+                    imageProcessProgressBar.style.width = progress + '%';
+                    
+                    // 更新处理中图像预览的标签
+                    document.getElementById('processed-image-label').textContent = '处理中... ' + progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(imageProcessInterval);
+                        
+                        // 图像处理完成
+                        stepImageProcess.classList.remove('active');
+                        stepImageProcess.classList.add('completed');
+                        stepImageProcess.querySelector('.step-icon i').className = 'fas fa-check';
+                        stepImageProcess.querySelector('.step-description').textContent = '已完成';
+                        
+                        // 显示处理结果
+                        document.getElementById('processed-image-label').textContent = '处理完成';
+                        
+                        // 生成模拟的翻译后图片
+                        generateTranslatedImage();
+                        
+                        // 延迟显示结果页面
+                        setTimeout(showResults, 500);
+                    }
+                }, 30);
+            }
+
+            // 生成模拟的翻译后图片
+            function generateTranslatedImage() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = function() {
+                    // 设置canvas大小与图片一致
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    // 绘制原始图片
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // 模拟文本区域
+                    const textAreas = [
+                        { x: img.width * 0.2, y: img.height * 0.3, width: img.width * 0.6, height: img.height * 0.1 },
+                        { x: img.width * 0.3, y: img.height * 0.5, width: img.width * 0.4, height: img.height * 0.15 },
+                        { x: img.width * 0.1, y: img.height * 0.7, width: img.width * 0.8, height: img.height * 0.1 }
+                    ];
+                    
+                    // 在文本区域绘制半透明覆盖层和英文文本
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                    
+                    textAreas.forEach((area, index) => {
+                        // 绘制半透明覆盖层
+                        ctx.fillRect(area.x, area.y, area.width, area.height);
+                        
+                        // 设置文本样式
+                        ctx.fillStyle = '#333333';
+                        ctx.font = Math.floor(area.height * 0.6) + 'px Arial, sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        // 绘制模拟的英文文本
+                        let text;
+                        switch(index) {
+                            case 0:
+                                text = 'Smart Translator';
+                                break;
+                            case 1:
+                                text = 'Translate Product Images';
+                                break;
+                            case 2:
+                                text = 'Quick and Accurate Results';
+                                break;
+                        }
+                        
+                        ctx.fillText(text, area.x + area.width / 2, area.y + area.height / 2);
+                    });
+                    
+                    // 将处理后的图像应用到预览和结果
+                    const processedImageUrl = canvas.toDataURL('image/png');
+                    processedImagePreview.src = processedImageUrl;
+                    comparisonAfterImg.src = processedImageUrl;
+                    
+                    // 更新文本显示
+                    originalText.textContent = '智能翻译器 - 一键翻译您的商品图片，快速获取多语言版本。';
+                    translatedText.textContent = 'Smart Translator - Translate your product images with one click, quickly get multilingual versions.';
+                };
+                
+                img.src = originalImagePreview.src;
+            }
+
+            // 显示结果
+            function showResults() {
+                workspaceStepProcess.style.display = 'none';
+                workspaceStepResult.style.display = 'block';
+            }
+
+            // 取消处理按钮
+            if (cancelProcessBtn) {
+                cancelProcessBtn.addEventListener('click', function() {
+                    // 重置处理步骤
+                    resetWorkspace();
+                });
+            }
+
+            // 上传新图片按钮
+            if (newUploadBtn) {
+                newUploadBtn.addEventListener('click', function() {
+                    resetWorkspace();
+                });
+            }
+
+            // 下载按钮
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function() {
+                    alert('图片已下载（模拟）');
+                });
+            }
+
+            // 分享按钮
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function() {
+                    alert('分享链接已复制到剪贴板（模拟）');
+                });
+            }
+
+            // 重新翻译按钮
+            if (retranslateBtn) {
+                retranslateBtn.addEventListener('click', function() {
+                    alert('已使用新的语言设置重新翻译（模拟）');
+                });
+            }
+
+            // 重置工作区
+            function resetWorkspace() {
+                // 重置上传区域
+                uploadProgress.style.display = 'none';
+                uploadProgressBar.style.width = '0%';
+                fileInput.value = '';
+                
+                // 重置处理步骤
+                stepOcr.classList.remove('completed', 'active');
+                stepTranslate.classList.remove('completed', 'active');
+                stepImageProcess.classList.remove('completed', 'active');
+                
+                stepOcr.classList.add('active');
+                
+                stepOcr.querySelector('.step-icon i').className = 'fas fa-file-alt';
+                stepTranslate.querySelector('.step-icon i').className = 'fas fa-language';
+                stepImageProcess.querySelector('.step-icon i').className = 'fas fa-image';
+                
+                stepOcr.querySelector('.step-description').textContent = '正在识别图片中的文字...';
+                stepTranslate.querySelector('.step-description').textContent = '等待中...';
+                stepImageProcess.querySelector('.step-description').textContent = '等待中...';
+                
+                stepTranslate.querySelector('.progress-bar').style.display = 'none';
+                stepImageProcess.querySelector('.progress-bar').style.display = 'none';
+                
+                ocrProgressBar.style.width = '0%';
+                translateProgressBar.style.width = '0%';
+                imageProcessProgressBar.style.width = '0%';
+                
+                // 切换回上传区域
+                workspaceStepUpload.style.display = 'block';
+                workspaceStepProcess.style.display = 'none';
+                workspaceStepResult.style.display = 'none';
+            }
+        }
+
+        /**
+         * 设置图片对比滑块的交互
+         */
+        function setupComparisonSlider() {
+            const slider = document.getElementById('comparison-slider');
+            const container = slider ? slider.parentElement : null;
+            
+            if (!slider || !container) return;
+            
+            // 鼠标拖动滑块
+            slider.addEventListener('mousedown', startDrag);
+            
+            // 触摸设备支持
+            slider.addEventListener('touchstart', startDrag);
+            
+            function startDrag(e) {
+                e.preventDefault();
+                
+                // 鼠标事件
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', stopDrag);
+                
+                // 触摸事件
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('touchend', stopDrag);
+            }
+            
+            function drag(e) {
+                let x;
+                
+                if (e.type === 'touchmove') {
+                    x = e.touches[0].clientX;
+                } else {
+                    x = e.clientX;
+                }
+                
+                const containerRect = container.getBoundingClientRect();
+                const containerLeft = containerRect.left;
+                const containerWidth = containerRect.width;
+                
+                // 计算滑块位置
+                let position = (x - containerLeft) / containerWidth;
+                
+                // 限制在0-1之间
+                position = Math.max(0, Math.min(1, position));
+                
+                // 更新滑块位置
+                const leftPercent = position * 100;
+                slider.style.left = leftPercent + '%';
+                
+                // 更新图片显示区域
+                container.querySelector('.comparison-before').style.width = leftPercent + '%';
+            }
+            
+            function stopDrag() {
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', stopDrag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('touchend', stopDrag);
+            }
+        }
+    </script>
+</body>
+</html>

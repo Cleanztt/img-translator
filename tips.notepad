@@ -1,0 +1,132 @@
+# 商品图片翻译网站技术方案
+
+## 推荐技术组合
+
+根据您的需求，我推荐以下技术组合：
+
+### 前端
+- **React**: 用于构建用户界面
+- **Ant Design/Material UI**: UI组件库
+- **Tailwind CSS**: 实用优先的CSS框架
+- **Next.js**: React框架，提供服务端渲染、静态生成等功能
+
+### 后端
+- **Node.js**: JavaScript运行时
+- **Express.js**: Web应用框架
+- **Tesseract.js**: OCR文字识别库
+- **百度翻译API**: 文本翻译
+- **jimp/sharp**: 图像处理库
+
+### 部署
+- **Vercel**: 前端部署
+- **Railway/Render**: 后端部署
+- **MongoDB Atlas**: 数据存储（可选，用于保存用户历史翻译）
+
+## 脚手架搭建
+
+### 1. 创建Next.js应用
+
+```bash
+npx create-next-app@latest img-translator
+cd img-translator
+```
+
+### 2. 安装核心依赖
+
+```bash
+npm install express axios tesseract.js jimp multer cors dotenv
+```
+
+### 3. 项目结构
+
+```
+img-translator/
+├── public/
+│   └── ...
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── route.js       # API路由
+│   │   ├── components/        # 组件目录
+│   │   ├── layout.js          # 布局组件
+│   │   ├── page.js            # 主页面
+│   ├── lib/                   # 工具库
+│   │   ├── baiduTranslate.js  # 百度翻译API封装
+│   │   ├── imageProcessor.js  # 图像处理逻辑
+├── .env.local                 # 环境变量
+└── package.json
+```
+
+## 核心功能实现思路
+
+### 1. 图片上传与预览
+
+设计一个拖放区域，允许用户上传图片，并提供预览功能。
+
+### 2. OCR文字识别
+
+使用Tesseract.js进行OCR文字识别，识别图片中的文字内容和位置信息。
+
+### 3. 文本翻译
+
+调用百度翻译API，翻译识别出来的文字内容。
+
+### 4. 图像处理
+
+使用图像处理库(如jimp或sharp)将翻译后的文字覆盖到原图片上，保持原有布局和样式。
+
+### 5. 图片下载
+
+提供下载按钮，允许用户保存处理后的图片。
+
+## 接口设计
+
+### 1. 图片上传接口
+
+```
+POST /api/upload
+请求体: FormData (包含图片文件)
+响应: { success: true, imageUrl: '图片URL', imageId: '图片ID' }
+```
+
+### 2. 文字识别接口
+
+```
+POST /api/ocr
+请求体: { imageId: '图片ID' }
+响应: { success: true, textRegions: [{ text: '文本', x: 0, y: 0, width: 100, height: 50 }] }
+```
+
+### 3. 翻译接口
+
+```
+POST /api/translate
+请求体: { texts: ['文本1', '文本2'] }
+响应: { success: true, translations: ['translation1', 'translation2'] }
+```
+
+### 4. 图像处理接口
+
+```
+POST /api/process-image
+请求体: { imageId: '图片ID', textReplacements: [{ original: { text, x, y, width, height }, translation: '翻译' }] }
+响应: { success: true, processedImageUrl: '处理后图片URL' }
+```
+
+## 百度翻译API集成
+
+需要申请百度翻译API的开发者账号，获取APP ID和密钥，然后设置在环境变量中。
+
+```javascript
+// lib/baiduTranslate.js 示例
+/**
+ * 调用百度翻译API进行文本翻译
+ * @param {string} text - 需要翻译的文本
+ * @param {string} from - 源语言
+ * @param {string} to - 目标语言
+ * @return {Promise<string>} 翻译后的文本
+ */
+async function translateText(text, from = 'auto', to = 'en') {
+  // 实现逻辑
+}
+```
