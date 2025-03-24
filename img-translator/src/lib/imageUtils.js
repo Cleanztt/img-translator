@@ -9,10 +9,10 @@ import md5 from 'md5';
  */
 export async function recognizeText(imageFile) {
   try {
-    // 添加处理进度的回调
-    const progressCallback = info => {
-      if (info.status === 'recognizing text') {
-        console.log(`文字识别进度: ${(info.progress * 100).toFixed(2)}%`);
+    // 添加处理进度的回调，简化回调函数避免DataCloneError
+    const progressCallback = progress => {
+      if (progress.status === 'recognizing text') {
+        console.log(`文字识别进度: ${(progress.progress * 100).toFixed(2)}%`);
       }
     };
     
@@ -274,4 +274,4 @@ function drawTextWithWrapping(ctx, text, x, y, maxWidth, maxHeight, fontSize) {
 /**
  * 在实际项目中，建议将文字识别和翻译功能放在后端处理
  * 前端可以调用API接口进行处理，这样可以减轻前端负担并保护API密钥
- */ 
+ */
