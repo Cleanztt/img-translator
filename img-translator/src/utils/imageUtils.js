@@ -47,21 +47,78 @@ export const sleep = (ms) => {
  * @param {string} options.fontFamily - 字体家族
  * @param {string} options.bgColor - 背景颜色
  * @param {number} options.padding - 内边距
+ * @param {Object} options.originalTextBox - 原文本框信息
  */
 export const drawText = (ctx, text, x, y, options = {}) => {
   const {
     color = '#000',
-    fontSize = '16px',
+    fontSize = '14px',
     fontFamily = 'Arial, sans-serif',
-    bgColor = 'rgba(255, 255, 255, 0.8)',
-    padding = 4
+    bgColor = 'rgba(0, 0, 0, 0.7)',
+    padding = 4,
+    originalTextBox = null
   } = options;
 
+  // 如果提供了原文本框信息，直接在原位置绘制翻译文本
+  if (originalTextBox) {
+    const { x: origX, y: origY, width: origWidth, height: origHeight } = originalTextBox;
+    
+    // 保存上下文状态
+    ctx.save();
+    
+    // 计算原文字体大小（基于文本框高度估算）
+    const estimatedOrigFontSize = Math.max(Math.floor(origHeight * 0.7), 10);
+    const baseFontSize = `${estimatedOrigFontSize}px`;
+    
+    // 先完全清除原区域（绘制纯白色矩形作为底层）
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(origX, origY - origHeight, origWidth, origHeight);
+    
+    // 在原文文本框的位置绘制完全不透明的黑色背景
+    ctx.fillStyle = 'rgb(0, 0, 0)'; // 完全不透明黑色
+    ctx.fillRect(origX, origY - origHeight, origWidth, origHeight);
+    
+    // 设置初始字体大小（基于原文估算）
+    ctx.font = `${baseFontSize} ${fontFamily}`;
+    
+    // 测量文本宽度以进行自适应处理
+    const metrics = ctx.measureText(text);
+    let fitFontSize = baseFontSize;
+    
+    // 如果文本宽度超过原文框宽度，缩小字体
+    if (metrics.width > origWidth - padding * 2) {
+      // 按比例缩小字体
+      const scaleFactor = (origWidth - padding * 2) / metrics.width;
+      const newSize = Math.floor(estimatedOrigFontSize * scaleFactor);
+      fitFontSize = `${newSize}px`;
+      ctx.font = `${fitFontSize} ${fontFamily}`;
+    }
+    
+    // 在原位置绘制翻译文本
+    ctx.fillStyle = '#FFFFFF'; // 白色文本
+    
+    // 文本居中显示
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // 绘制文本
+    ctx.fillText(
+      text, 
+      origX + origWidth / 2, // X坐标居中
+      origY - origHeight / 2 // Y坐标居中
+    );
+    
+    // 恢复上下文状态
+    ctx.restore();
+    return;
+  }
+  
+  // 以下是没有提供原文本框信息时的默认行为
   ctx.font = `${fontSize} ${fontFamily}`;
   const metrics = ctx.measureText(text);
   const textHeight = parseInt(fontSize, 10);
   
-  // 绘制背景
+  // 绘制翻译文本的背景
   ctx.fillStyle = bgColor;
   ctx.fillRect(
     x - padding, 
