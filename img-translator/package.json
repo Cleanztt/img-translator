@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
+    "export": "next build && next export -o out",
+    "deploy": "next build && next start -p $PORT",
     "lint": "next lint"
   },
   "keywords": [],
@@ -19,7 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sharp": "^0.33.5",
-    "tesseract.js": "^6.0.0"
+    "tesseract.js": "^4.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
